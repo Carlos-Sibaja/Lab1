@@ -1,5 +1,5 @@
 #pip install streamlit
-#streamlit run 0_Benchmark CSV vs Parquet.py to run de app
+#streamlit run 0_Benchmark CSV-vs-Parquet.py to run de app
 #streamlit run app.py --server.port 8501 to run de app in a different port
 
 
