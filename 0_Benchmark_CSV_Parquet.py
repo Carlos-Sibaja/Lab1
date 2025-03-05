@@ -1,14 +1,18 @@
 #pip install streamlit
 #streamlit run 0_Benchmark_CSV_Parquet.py to run de app
 #streamlit run app.py --server.port 8501 to run de app in a different port
-
+# IP Address: https://spltopics4260lab1.streamlit.app/
 
 # Import the Streamlit library
 import streamlit as st
 import pandas as pd
 
 # Page name
-st.set_page_config(page_title="Lab1", page_icon=":house:", layout="wide")
+st.set_page_config(page_title="Lab1", page_icon=":chart_with_upwards_trend:", layout="wide")
+
+# Set the sidebar menu
+st.sidebar.title("Menu")
+st.sidebar.subheader("Select the page to navigate")
 
 
 # Load the logo and display it at the top-left

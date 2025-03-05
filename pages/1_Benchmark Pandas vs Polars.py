@@ -4,7 +4,11 @@ import pandas as pd
 import numpy as np
 
 # Load the logo and display it at the top-left
-st.image("logo.jpg", width=200)  # Adjust width if needed
+st.image("logo.jpg", width=200)  
+
+# Set the sidebar menu
+st.sidebar.title("Menu")
+st.sidebar.subheader("Select the page to navigate")
 
 # ********************Title and subtitle of the app
 st.markdown(

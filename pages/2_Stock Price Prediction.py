@@ -10,7 +10,11 @@ from sklearn.metrics import r2_score
 from tabulate import tabulate  # To display results in table format
 
 # Load the logo and display it at the top-left
-st.image("logo.jpg", width=250)  # Adjust width if needed
+st.image("logo.jpg", width=200) 
+
+# Set the sidebar menu
+st.sidebar.title("Menu")
+st.sidebar.subheader("Select the page to navigate")
 
 # ********************Title and subtitle of the app
 st.markdown(
