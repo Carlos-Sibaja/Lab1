@@ -1,6 +1,6 @@
 #pip install streamlit
-#streamlit run 0_Benchmark_CSV_Parquet.py to run de app
-#streamlit run app.py --server.port 8501 to run de app in a different port
+#  streamlit run 0_Benchmark_CSV_Parquet.py to run de app
+#  streamlit run app.py --server.port 8501 to run de app in a different port
 # IP Address: https://spltopics4260lab1.streamlit.app/
 
 # Import the Streamlit library

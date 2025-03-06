@@ -29,14 +29,30 @@ st.markdown(
 sp500_companies = pd.read_csv("sp500_companies.csv")
 sp500_companies["Ticker"] = sp500_companies["Ticker"].str.upper()
 
+# Load dataset
+df = pd.read_csv("all_stocks_5yr.csv")
+df["date"] = pd.to_datetime(df["date"])
+df = df.sort_values("date")
+
+# Get unique stock tickers
+tickers = df["name"].unique()
+
 # User input for stock ticker
-col1, col2 = st.columns(2)
-userInput = col1.text_input("### Choose a company ticker:", "AAPL")
+col1, col2, col3 = st.columns(3)
+
+# Crear un campo de entrada para filtrar los tickers
+search_term = col1.text_input("### Search for a ticker (Start typing):", "")
+
+# Filtrar tickers dinámicamente
+filtered_tickers = [ticker for ticker in tickers if ticker.upper().startswith(search_term.upper())]
+
+# Mostrar un selectbox con las opciones filtradas
+userInput = col2.selectbox("Choose a company ticker:", filtered_tickers if filtered_tickers else tickers)
 
 # Get company name
 companyName = sp500_companies.loc[sp500_companies["Ticker"] == userInput, "Name"]
 companyName = companyName.values[0] if not companyName.empty else "Company Not Found"
-col2.text_input("Company Name", companyName, disabled=True)
+col3.text_input("Company Name", companyName, disabled=True)
 
 # Load dataset
 df = pd.read_csv("all_stocks_5yr.csv")
