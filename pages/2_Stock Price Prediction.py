@@ -97,8 +97,41 @@ for i in range(30):
     pred_price = rf_reg.predict(last_row)[0]
     future_predictions.append(pred_price)
     last_row = pd.DataFrame([[pred_price] + last_row.iloc[0, 1:].tolist()], columns=X.columns)
+
+# Create table for predictions
+st.markdown(f"<h2 style='text-align: center; font-size: 24px; color: blue'>Predicted Next Day Closing Price for {companyName}</h2>", unsafe_allow_html=True)
+
+# Load the CSV file
+df_part3 = pd.read_csv('Predictions.csv')
+
+# Apply CSS to center the table and increase font size
+st.markdown(
+    """
+   <style>
+      th, td {
+        text-align: center !important;
+        vertical-align: bottom !important;
+    }
+
+   .dataframe {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 18px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Display the table centered using st.markdown
+st.markdown('<div class="center-table">' + df_part3.to_html(index=False) + '</div>', unsafe_allow_html=True)
+
 # Display R² values
-st.write(f"### R² Comparison for {userInput}")
+st.write("\n")
+st.markdown(f"<h2 style='text-align: center; font-size: 24px; color: blue;'>R² Comparison for {companyName}/{userInput} </h2>", unsafe_allow_html=True)
+
+# Create two columns
 col1, col2 = st.columns(2)
 col1.metric("Linear Regression R²", f"{lin_reg_r2:.4f}")
 col2.metric("Random Forest R²", f"{rf_reg_r2:.4f}")
