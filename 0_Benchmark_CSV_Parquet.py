@@ -13,6 +13,8 @@ st.set_page_config(page_title="Lab1", page_icon=":chart_with_upwards_trend:", la
 # Set the sidebar menu
 st.sidebar.title("Menu")
 st.sidebar.subheader("Select the page to navigate")
+st.sidebar.write("Great Video on Streamlit")
+st.sidebar.link_button("Watch the video", "https://www.youtube.com/watch?v=D0D4Pa22iG0")
 
 
 # Load the logo and display it at the top-left
@@ -40,15 +42,3 @@ df_part1 = pd.read_csv('benchmark_csv_parquet.csv')
 st.write(df_part1.set_index("Scale"))
 
 st.write("\n")
-
-# Create two columns
-col1, col2 = st.columns(2)
-
-# Apply styling inside both columns
-with col1:
-    st.markdown('<div class="centered-container"><p class="header-text">Great Video on Streamlit Basics</p></div>', unsafe_allow_html=True)
-
-with col2:
-    st.markdown('<div class="centered-container button-container">', unsafe_allow_html=True)
-    st.link_button("Watch the video", "https://www.youtube.com/watch?v=D0D4Pa22iG0")
-    st.markdown('</div>', unsafe_allow_html=True)
