@@ -113,6 +113,7 @@ st.markdown(
         vertical-align: bottom !important;
     }
 
+   
    .dataframe {
         display: block;
         margin-left: auto;
