@@ -8,9 +8,6 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score
 
-
-
-
 # Header
 # Create two columns
 col1, col2 = st.columns(2)
@@ -51,11 +48,6 @@ companyName = sp500_companies.loc[sp500_companies["Ticker"] == userInput, "Name"
 companyName = companyName.values[0] if not companyName.empty else "Company Not Found"
 col3.text_input("Company Name", companyName, disabled=True)
 
-# Load dataset
-df = pd.read_csv("all_stocks_5yr.csv")
-df["date"] = pd.to_datetime(df["date"])
-df = df.sort_values("date")
-
 # Filter data for selected company
 df_selected = df[df["name"].str.upper() == userInput.upper()]
 
@@ -85,7 +77,7 @@ rf_reg = RandomForestRegressor(n_estimators=200, max_depth=10, min_samples_split
 lin_reg_r2 = r2_score(y_test, lin_reg.predict(X_test))
 rf_reg_r2 = r2_score(y_test, rf_reg.predict(X_test))
 
-# *******************Predict 90 days into the future**************
+# Predict 15 days into the future
 future_dates = pd.date_range(df_selected["date"].iloc[-1], periods=16, freq='B')[1:]
 future_predictions = []
 last_row = pd.DataFrame([X.iloc[-1]], columns=X.columns)
@@ -101,20 +93,18 @@ st.markdown(f"<h2 style='text-align: center; font-size: 24px; color: orange'>Pre
 # Load the CSV file
 df_part3 = pd.read_csv('Predictions.csv')
 
-# Display the table centered using st.markdown
+# Apply CSS to center the table
 st.markdown(
     """
-   <style>
-      th, td {
+    <style>
+    .center-table {
+        display: flex;
+        justify-content: center;
+        font-size: 18px;
+    }
+    th, td {
         text-align: center !important;
         vertical-align: bottom !important;
-    }
-  
-   .dataframe {
-        display: block;
-        margin-left: 20%;
-        margin-right: auto;
-        font-size: 18px;
     }
     </style>
     """,

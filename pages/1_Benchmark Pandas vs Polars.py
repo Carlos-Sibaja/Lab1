@@ -1,9 +1,8 @@
-# Import the Streamlit library
+# Import necessary libraries
 import streamlit as st
 import pandas as pd
-import numpy as np
 
-#Header
+# Header
 # Create two columns
 col1, col2 = st.columns(2)
 col1.image("logo.jpg", width=200)
@@ -23,12 +22,12 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
 # Content for Part2 A
 st.markdown(
     "<div style='text-align: center;'>Performance of Pandas and Polars Libraries Execution.</div>",
     unsafe_allow_html=True
 )
+
 # Load the CSV file
 df_part1 = pd.read_csv('Benchmark_Pandas_Polars.csv')
 
