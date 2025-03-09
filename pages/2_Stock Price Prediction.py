@@ -35,7 +35,7 @@ tickers = df["name"].unique()
 col1, col2, col3 = st.columns(3)
 
 # Create an input field to filter tickers
-search_term = col1.text_input("### Search for a ticker (Start typing):", "")
+search_term = col1.text_input("### Start typing to reduce the opcions:", "A")
 
 # Dynamically filter tickers
 filtered_tickers = [ticker for ticker in tickers if ticker.upper().startswith(search_term.upper())]
