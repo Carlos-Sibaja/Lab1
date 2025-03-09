@@ -15,21 +15,21 @@ st.set_page_config(page_title="Lab1", page_icon=":chart_with_upwards_trend:", la
 # Sidebar Menu
 st.sidebar.title("Menu")
 st.sidebar.subheader("Select the page to navigate")
-st.sidebar.markdown("[Watch the video](https://www.youtube.com/watch?v=D0D4Pa22iG0)")
 
-# Load and display the logo
-st.image("logo.jpg", width=200)
-
-# Title and Subtitle
-st.markdown("<h1 style='color: blue; font-size: 25pt;'>CSIS 4260 – Spl. Topics in Data Analytics</h1>", unsafe_allow_html=True)
+#Header
+# Create two columns
+col1, col2 = st.columns(2)
+col1.image("logo.jpg", width=200)
+col2.markdown("<h1 style='color: blue; font-size: 25pt;'>CSIS 4260 – Spl. Topics in Data Analytics</h1>", unsafe_allow_html=True)
 st.markdown("<h3 style='color: blue; font-size: 10pt;'>Carlos Sibaja Jimenz Id: 300384848</h3>", unsafe_allow_html=True)
+
 st.markdown("<h2 style='color: orange; font-weight: bold;'>Part1 A: Benchmark CSV vs Parquet</h2>", unsafe_allow_html=True)
 
 # Load Data
 df_part1 = pd.read_csv('benchmark_csv_parquet.csv')
 
 # Indicator Selection
-st.markdown("<h3 style='color:blue; font-weight: bold; text-align: left;'>Select Indicator for Visualization</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='color:blue; font-weight: bold; text-align: left;'>Dynamic Visualization</h3>", unsafe_allow_html=True)
 st.markdown(
     """
     <style>
@@ -40,7 +40,7 @@ st.markdown(
             background-color: orange;
             padding: 10px;
             border-radius: 20px;
-            width: 40%;
+            width: 60%;
             margin: auto;
         }
 
@@ -55,59 +55,66 @@ st.markdown(
 )
 
 choices = ["Size", "Read Time", "Write Time"]
-variable = st.radio("Choose the variable to visualize:", choices, horizontal=True)
+variable = st.radio("Select to start the Benchmark:", choices, horizontal=True)
 
-# Function to Plot Graphs (CSV vs Parquet)
-st.write("\n" * 3)
+# Column mappings
+column_mapping = {
+    "Size": ("CSV_Size_MB", "Parquet_Size_MB"),
+    "Read Time": ("CSV_Read_Time_s", "Parquet_Read_Time_s"),
+    "Write Time": ("CSV_Write_Time_s", "Parquet_Write_Time_s")
+}
+csv_col, parquet_col = column_mapping[variable]
 
-# Function to Plot Graphs (Compression Comparison)
-def plot_graphs(variable):
-    fig, axes = plt.subplots(1, 3, figsize=(12, 4), sharey=True)
+# Function to plot graphs
+def plot_graphs(csv_col, parquet_col):
+    fig, axes = plt.subplots(1, 3, figsize=(18, 6), sharey=True)
     scales = [1, 10, 100]
     titles = ["Scale 1X", "Scale 10X", "Scale 100X"]
-    compression_types = ["None", "gzip", "snappy", "brotli"]  # Compression methods
-    colors = ["blue", "green", "blue", "green", "blue", "green", "blue", "green"]  # Blue for CSV, Green for Parquet
+    compression_types = ["None", "snappy", "gzip", "brotli"]
+    colors = ["blue", "green"]
 
     for i, scale in enumerate(scales):
         df_scale = df_part1[df_part1["Scale"] == scale]
 
-        # Extract values for CSV and Parquet with different compressions
-        values = []
-        labels = []
+        values, labels = [], []
+
         for comp in compression_types:
-            csv_value = df_scale[df_scale["Compression"] == comp]["CSV_Size_MB"].values
-            parquet_value = df_scale[df_scale["Compression"] == comp]["Parquet_Size_MB"].values
+            df_filtered = df_scale[df_scale["Compression"].fillna("None") == comp]
 
-            if len(csv_value) > 0:
-                values.append(csv_value[0])
-                labels.append(f"CSV-{comp}")
-            if len(parquet_value) > 0:
-                values.append(parquet_value[0])
-                labels.append(f"Parquet-{comp}")
+            if df_filtered.empty:
+                continue  # Skip if no data for this compression type
 
-        ylabel = "Size (MB)" if variable == "Size" else ("Read Time (s)" if variable == "Read Time" else "Write Time (s)")
-        
-        # Improved graph styling
-        sns.barplot(x=labels, y=values, ax=axes[i], palette=colors[:len(values)])
+            csv_value = df_filtered[csv_col].values[0]
+            parquet_value = df_filtered[parquet_col].values[0]
 
-        # Display values on bars
+            values.extend([csv_value, parquet_value])
+            labels.extend([f"CSV-{comp}", f"Parquet-{comp}"])
+
+        # Ensure data is present before plotting
+        if len(values) == 0:
+            st.warning(f"⚠️ No valid data for Scale {scale}")
+            continue  
+
+        ylabel = "Compression Technique"
+        xlabel = "MB" if variable == "Size" else "Seconds"
+
+        sns.barplot(x=values, y=labels, ax=axes[i], palette=colors * (len(values) // 2), orient='h')
+
         for index, value in enumerate(values):
-            axes[i].text(index, value + (value * 0.02), f"{value:.1f}", ha='center', fontsize=8, color='black')
+            axes[i].text(value, index, f"{value:.1f}", va='center', ha='right', fontsize=9, color='white', weight='bold')
 
         axes[i].set_title(titles[i], fontsize=10, fontweight="bold", color="green")
-        axes[i].set_ylabel(ylabel, fontsize=9)
-        axes[i].set_xlabel("Compression Type", fontsize=9)
-        axes[i].tick_params(axis='x', rotation=45)
-        axes[i].grid(axis="y", linestyle="--", alpha=0.7)
+        axes[i].set_ylabel(ylabel if i == 0 else "", fontsize=9)
+        axes[i].set_xlabel(xlabel, fontsize=10, fontweight="bold")
+        axes[i].tick_params(axis='x', labelsize=9)
+        axes[i].grid(axis="x", linestyle="--", alpha=0.7)
 
     plt.tight_layout()
     st.pyplot(fig)
 
-# Plot Second Set of Graphs
-plot_graphs(variable)
+# Call function with correct column names
+plot_graphs(csv_col, parquet_col)
 
-# ******************Part1 A: Benchmark CSV vs Parquet
-st.write("Comparison of the performance of CSV and Parquet formats for 1X, 10X, 100X.")
-st.write("\n")
-st.write(df_part1.set_index("Scale"))
-st.write("\n")
+# Display dataset in Streamlit
+st.markdown("<h3 style='color:blue; font-weight: bold; text-align: left;'>Summary Table of Size of Files and Processing Time in Seconds</h3>", unsafe_allow_html=True)
+st.markdown('<div class="center-table">' + df_part1.to_html(index=False) + '</div>', unsafe_allow_html=True)

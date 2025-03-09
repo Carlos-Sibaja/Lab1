@@ -9,21 +9,16 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score
 from tabulate import tabulate  # To display results in table format
 
-# Load the logo
-st.image("logo.jpg", width=200)
+# Header
+# Create two columns
+col1, col2 = st.columns(2)
+col1.image("logo.jpg", width=200)
+col2.markdown("<h1 style='color: blue; font-size: 25pt;'>CSIS 4260 – Spl. Topics in Data Analytics</h1>", 
+              unsafe_allow_html=True)
+st.markdown("<h3 style='color: blue; font-size: 10pt;'>Carlos Sibaja Jimenz Id: 300384848</h3>", unsafe_allow_html=True)
 
 # Sidebar menu
 st.sidebar.title("Menu")
-
-# Title
-st.markdown(
-    "<h1 style='color: blue;'>CSIS 4260 – Spl. Topics in Data Analytics</h1>",
-    unsafe_allow_html=True
-)
-st.markdown(
-    "<h3 style='color: blue;'>Carlos Sibaja Jimenez Id: 300384848</h3>",
-    unsafe_allow_html=True
-)
 
 # Load S&P 500 company tickers
 sp500_companies = pd.read_csv("sp500_companies.csv")
@@ -40,13 +35,13 @@ tickers = df["name"].unique()
 # User input for stock ticker
 col1, col2, col3 = st.columns(3)
 
-# Crear un campo de entrada para filtrar los tickers
+# Create an input field to filter tickers
 search_term = col1.text_input("### Search for a ticker (Start typing):", "")
 
-# Filtrar tickers dinámicamente
+# Dynamically filter tickers
 filtered_tickers = [ticker for ticker in tickers if ticker.upper().startswith(search_term.upper())]
 
-# Mostrar un selectbox con las opciones filtradas
+# Display a selectbox with the filtered options
 userInput = col2.selectbox("Choose a company ticker:", filtered_tickers if filtered_tickers else tickers)
 
 # Get company name
@@ -88,23 +83,23 @@ rf_reg = RandomForestRegressor(n_estimators=200, max_depth=10, min_samples_split
 lin_reg_r2 = r2_score(y_test, lin_reg.predict(X_test))
 rf_reg_r2 = r2_score(y_test, rf_reg.predict(X_test))
 
-# Predict 30 days into the future
-future_dates = pd.date_range(df_selected["date"].iloc[-1], periods=31, freq='B')[1:]
+# *******************Predict 90 days into the future**************
+future_dates = pd.date_range(df_selected["date"].iloc[-1], periods=16, freq='B')[1:]
 future_predictions = []
 last_row = pd.DataFrame([X.iloc[-1]], columns=X.columns)
 
-for i in range(30):
+for i in range(15):
     pred_price = rf_reg.predict(last_row)[0]
     future_predictions.append(pred_price)
     last_row = pd.DataFrame([[pred_price] + last_row.iloc[0, 1:].tolist()], columns=X.columns)
 
 # Create table for predictions
-st.markdown(f"<h2 style='text-align: center; font-size: 24px; color: blue'>Predicted Next Day Closing Price for {companyName}</h2>", unsafe_allow_html=True)
+st.markdown(f"<h2 style='text-align: center; font-size: 24px; color: orange'>Predicted Next Day Closing Price for {companyName}</h2>", unsafe_allow_html=True)
 
 # Load the CSV file
 df_part3 = pd.read_csv('Predictions.csv')
 
-# Apply CSS to center the table and increase font size
+# Display the table centered using st.markdown
 st.markdown(
     """
    <style>
@@ -112,11 +107,10 @@ st.markdown(
         text-align: center !important;
         vertical-align: bottom !important;
     }
-
-   
+  
    .dataframe {
         display: block;
-        margin-left: auto;
+        margin-left: 20%;
         margin-right: auto;
         font-size: 18px;
     }
@@ -130,7 +124,7 @@ st.markdown('<div class="center-table">' + df_part3.to_html(index=False) + '</di
 
 # Display R² values
 st.write("\n")
-st.markdown(f"<h2 style='text-align: center; font-size: 24px; color: blue;'>R² Comparison for {companyName}/{userInput} </h2>", unsafe_allow_html=True)
+st.markdown(f"<h2 style='text-align: center; font-size: 24px; color: orange;'>R² Comparison for {companyName} / {userInput} </h2>", unsafe_allow_html=True)
 
 # Create two columns
 col1, col2 = st.columns(2)
@@ -140,10 +134,10 @@ col2.metric("Random Forest R²", f"{rf_reg_r2:.4f}")
 # Plot actual prices
 plt.figure(figsize=(9, 5))
 plt.plot(df_selected["date"], df_selected["close"], label=f"{userInput}/{companyName} Actual", linestyle="-")
-plt.plot(future_dates, future_predictions, marker="o", linestyle="dashed", label=f"{userInput}/{companyName} Predicted")
+plt.plot(future_dates, future_predictions, marker="o", markersize=3, linestyle="dashed", label=f"{userInput}/{companyName} Predicted")
 plt.xlabel("Year")
 plt.ylabel("Closing Price")
-plt.title(f"Stock Price Prediction for {companyName} ({userInput}) (Next 30 Days)")
+plt.title(f"Stock Price Prediction for {companyName} ({userInput}) -Next 15 Days-")
 plt.legend()
 plt.grid(True)
 

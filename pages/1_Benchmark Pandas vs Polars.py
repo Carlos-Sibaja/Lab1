@@ -3,17 +3,16 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-# Load the logo and display it at the top-left
-st.image("logo.jpg", width=200)  
+#Header
+# Create two columns
+col1, col2 = st.columns(2)
+col1.image("logo.jpg", width=200)
+col2.markdown("<h1 style='color: blue; font-size: 25pt;'>CSIS 4260 – Spl. Topics in Data Analytics</h1>", unsafe_allow_html=True)
 
 # Set the sidebar menu
 st.sidebar.title("Menu")
 st.sidebar.subheader("Select the page to navigate")
 
-# ********************Title and subtitle of the app
-st.markdown(
-    "<h1 style='color: blue; font-size: 25pt;'>CSIS 4260 – Spl. Topics in Data Analytics</h1>",
-    unsafe_allow_html=True)
 st.markdown(
     "<h3 style='color: blue; font-size: 10pt;'>Carlos Sibaja Jimenz Id: 300384848</h3>",
     unsafe_allow_html=True
