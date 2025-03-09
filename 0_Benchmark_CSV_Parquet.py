@@ -8,6 +8,7 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from tabulate import tabulate 
 
 # Streamlit Page Configuration
 st.set_page_config(page_title="Lab1", page_icon=":chart_with_upwards_trend:", layout="wide")

@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score
 from tabulate import tabulate  # To display results in table format
 import streamlit
-from tabulate import tabulate
+
 
 
 # Header
