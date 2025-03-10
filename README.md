@@ -1,6 +1,6 @@
-# Lab Work: Data Analytics with Streamlight
+# Lab Work: Data Analytics with Streamlight 
 
-## Overview
+## Overview of the Project
 This project is part of the CSIS 4260 – Special Topics in Data Analytics course. The application uses Streamlit and focuses on benchmarking different data processing techniques and predicting stock prices.
 
 ## Approach
