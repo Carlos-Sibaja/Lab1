@@ -38,7 +38,7 @@ st.markdown(
         div[data-testid="stRadio"] {
             display: flex;
             justify-content: center;
-            background-color: green;
+            background-color: gray;
             padding: 10px;
             border-radius: 20px;
             width: 60%;
